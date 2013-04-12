@@ -1,0 +1,64 @@
+# Swap / temporary files for vi and emacs.
+*.swp
+*~
+*#
+.#*
+\#*
+
+# Compiled Python files.
+*.pyc
+*.pyo
+
+# LaTeX intermediate files.
+*.aux
+*.bbl
+*.idx
+*.ind
+*.lof
+*.toc
+
+# Whatever an OMC file is.
+*.omc
+
+# Altium outputs.
+*History/
+*Project Logs for */
+*Project Outputs for */
+*.PcbDoc.htm
+*.SchDoc.htm
+*.PcbLib.htm
+*.SchLib.htm
+*.~SCHDOC
+*.~PCBDOC
+*.~PCBLIB
+*.~SCHLIB
+*.~LIBPKG
+*.eco
+*.ECO
+*.PcbDocPreview
+*.PCBDOCPreview
+*.SchDocPreview
+*.SCHDOCPreview
+*.drc
+*/Design Rule Check - *.html
+
+# Windows thumbnail databases.
+*/Thumbs.db
+
+# And then some directory-specific ignores imported from SVN.
+/doc/FreeRTOS/html/*
+/doc/FreeRTOS/latex/*
+/newsrc/obj
+/newsrc/.*
+/newsrc/include/libs/dsp/*16*.h
+/newsrc/include/libs/dsp/*32*.h
+/newsrc/libs/dsp/*32*.c
+/newsrc/libs/dsp/*16*.c
+/newsrc/maps/*
+/newsrc/pcapp/pcapp
+
+# Binary files generated during build.
+*.o
+*.d
+*.bin
+*.map
