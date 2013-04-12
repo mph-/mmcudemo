@@ -4,8 +4,7 @@ OPT = -Os
 
 MMCULIB_DIR = ../../mmculib
 
-DRIVERS = led
-PERIPHERALS = pit
+DRIVERS = led pacer
 
 TARGET = ledflash6.bin
 
