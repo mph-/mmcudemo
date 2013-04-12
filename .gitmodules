@@ -1,0 +1,6 @@
+[submodule "mat91lib"]
+	path = mat91lib
+	url = https://github.com/mph-/mat91lib.git
+[submodule "mmculib"]
+	path = mmculib
+	url = https://github.com/mph-/mmculib.git
