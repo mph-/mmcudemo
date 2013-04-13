@@ -4,7 +4,7 @@ OPT = -Os
 
 MMCULIB_DIR = ../../mmculib
 
-DRIVERS = i2cm
+DRIVERS = bbi2c
 
 TARGET = i2cm_test1.bin
 
