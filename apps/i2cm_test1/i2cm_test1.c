@@ -9,12 +9,17 @@
 #define SDA_PIO PIO_DEFINE(PORT_A, 8)
 #define SCL_PIO PIO_DEFINE(PORT_A, 9)
 
-static const i2cm_cfg_t i2c_dev1_cfg =
+static const i2cm_bus_cfg_t i2c_bus_cfg =
+{
+    .scl = SCL_PIO,
+    .sda = SDA_PIO
+};
+
+
+static const i2cm_dev_cfg_t i2c_dev1_cfg =
 {
     .id = 0x32,
     .addr_bytes = 1,
-    .scl = SCL_PIO,
-    .sda = SDA_PIO
 };
 
 
@@ -23,7 +28,7 @@ main (void)
 {
     i2cm_t i2c_dev1;
 
-    i2c_dev1 = i2cm_init (&i2c_dev1_cfg);
+    i2c_dev1 = i2cm_init (&i2c_bus_cfg, &i2c_dev1_cfg);
 
     while (1)
     {
