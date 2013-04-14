@@ -19,7 +19,6 @@ static const i2c_bus_cfg_t i2c_bus_cfg =
 static const i2c_slave_cfg_t i2c_slave1_cfg =
 {
     .id = 0x32,
-    .addr_bytes = 1,
 };
 
 
@@ -34,10 +33,11 @@ main (void)
     {
         uint8_t tx[] = {1, 2, 3, 4};
         uint8_t rx[] = {0, 0, 0, 0};
+        i2c_addr_t addr = 1;
 
-        i2c_master_addr_write (i2c_slave1, 1, tx, sizeof(tx));
+        i2c_master_addr_write (i2c_slave1, addr, 1, tx, sizeof(tx));
 
-        i2c_master_addr_read (i2c_slave1, 1, rx, sizeof(rx));
+        i2c_master_addr_read (i2c_slave1, addr, 1, rx, sizeof(rx));
 
         /* TODO: check if rx matches tx.  */
     }

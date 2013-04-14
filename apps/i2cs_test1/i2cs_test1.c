@@ -20,7 +20,6 @@ static const i2c_bus_cfg_t i2c_bus_cfg =
 static const i2c_slave_cfg_t i2c_slave1_cfg =
 {
     .id = 0x32,
-    .addr_bytes = 1,
 };
 
 
