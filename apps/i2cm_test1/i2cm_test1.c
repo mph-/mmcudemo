@@ -33,11 +33,13 @@ main (void)
     while (1)
     {
         uint8_t tx[] = {1, 2, 3, 4};
-        uint8_t rx[4];
+        uint8_t rx[] = {0, 0, 0, 0};
 
-        i2c_master_write (i2c_slave1, 25, tx, sizeof(tx));
+        i2c_master_write (i2c_slave1, 1, tx, sizeof(tx));
 
-        i2c_master_read (i2c_slave1, 25, rx, sizeof(rx));
+        i2c_master_read (i2c_slave1, 1, rx, sizeof(rx));
+
+        /* TODO: check if rx matches tx.  */
     }
 }
 
