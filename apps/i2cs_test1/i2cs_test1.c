@@ -4,6 +4,7 @@
    Descr: 
 */
 #include "i2c_slave.h"
+#include <string.h>
 
 
 #define SDA_PIO PIO_DEFINE(PORT_A, 8)
@@ -34,26 +35,20 @@ main (void)
     while (1)
     {
         i2c_addr_t addr;
+        uint8_t buffer[5];
         i2c_ret_t ret;
 
-        ret = i2c_slave_listen (i2c_slave1, &addr, 1000);
+        ret = i2c_slave_read (i2c_slave1, buffer, sizeof (buffer), 1000);
+
+        addr = buffer[0];
 
         if (addr >= sizeof (data))
             addr = 0;
 
-        switch (ret)
-        {
-        case I2C_SLAVE_READ:
-            i2c_slave_write (i2c_slave1, &data[addr], sizeof(data[0]));
-            break;
-
-        case I2C_SLAVE_WRITE:
-            i2c_slave_read (i2c_slave1, &data[addr], sizeof(data[0]));
-            break;
-
-        default:
-            break;
-        }
+        if (ret == 1)
+            i2c_slave_write (i2c_slave1, &data[addr], sizeof(data[0]), 1000);
+        else if (ret == 5)
+            memcpy (&data[addr], buffer + 1, sizeof(data[0]));
     }
 }
 
