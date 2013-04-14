@@ -36,7 +36,7 @@ main (void)
         i2c_addr_t addr;
         i2c_ret_t ret;
 
-        ret = i2c_slave_listen (i2c_slave1, &addr);
+        ret = i2c_slave_listen (i2c_slave1, &addr, 1000);
 
         if (addr >= sizeof (data))
             addr = 0;
