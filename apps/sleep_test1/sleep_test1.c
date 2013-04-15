@@ -5,10 +5,10 @@
 */
 #include "cpu.h"
 #include "led.h"
-#include "irq.h"
 #include "pio.h"
 #include "pacer.h"
 #include "button.h"
+#include "extint.h"
 
 
 #define BUTTON_POLL_RATE 100
@@ -24,6 +24,12 @@ static const led_cfg_t led1_cfg =
 };
 
 
+static const extint_cfg_t extint1_cfg =
+{
+    .pio = BUTTON1_PIO,
+};
+
+
 static const button_cfg_t button1_cfg =
 {
     .pio = BUTTON1_PIO
@@ -31,30 +37,16 @@ static const button_cfg_t button1_cfg =
 
 
 static void
-wakeup_isr (void)
+sleep_setup (void)
 {
-}
+    extint_t extint;
 
-
-static void
-sleep (void)
-{
-    /* Switch button to interrupt pin with pullup enabled.  */
-    pio_config_set (BUTTON1_PIO, PIO_PERIPH_PULLUP);
-
-    irq_config (AT91C_ID_IRQ1, 1,
-                AT91C_AIC_SRCTYPE_EXT_LOW_LEVEL, 
-                wakeup_isr);
-    
-    irq_enable (AT91C_ID_IRQ1);
-    
     pio_shutdown (BUTTON1_PIO);
-    
-    /* Turn off main oscillator, PLL, and master clock, switch to slow
-       clock, and sleep until get a button interrupt.  */
-    cpu_sleep ();
-    
-    irq_disable (AT91C_ID_IRQ1);
+
+    /* Note, only two PIOs can be used on the SAM7 for external interrupts.  */
+    extint = extint_init (&extint1_cfg);
+
+    extint_sleep (extint);
     
     /* Force a CPU reset.  */
     cpu_reset ();
@@ -95,7 +87,7 @@ main (void)
             /* Turn off LED.  */
             led_set (led1, 0);        
 
-            sleep ();
+            sleep_setup ();
         }
     }
     return 0;
