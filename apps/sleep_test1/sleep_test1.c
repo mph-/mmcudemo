@@ -14,9 +14,10 @@
 #define BUTTON_POLL_RATE 100
 
 #define BUTTON1_PIO PIO_DEFINE (PORT_A, 30)
+#define EXTINT1_PIO BUTTON1_PIO
 
 
-/* Define LEDs configuration.  */
+/* Define LED configuration.  */
 static const led_cfg_t led1_cfg =
 {
     .pio = LED1_PIO,
@@ -41,7 +42,7 @@ sleep_setup (void)
 {
     extint_t extint;
 
-    pio_shutdown (BUTTON1_PIO);
+    pio_shutdown (EXTINT1_PIO);
 
     /* Note, only two PIOs can be used on the SAM7 for external interrupts.  */
     extint = extint_init (&extint1_cfg);
