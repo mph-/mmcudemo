@@ -4,7 +4,7 @@ OPT = -Os
 
 MMCULIB_DIR = ../../mmculib
 
-DRIVERS = usb_cdc
+DRIVERS = usb_cdc pacer
 
 TARGET = usb_cdc_test1.bin
 
