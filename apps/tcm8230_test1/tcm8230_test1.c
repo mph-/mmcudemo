@@ -9,7 +9,7 @@
 int
 main (void)
 {
-    tcm8230_init ();
+    tcm8230_init (TCM8230_PICSIZE_SQCIF);
 
     while (1)
         continue;
