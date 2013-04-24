@@ -6,11 +6,21 @@
 #include "tcm8230.h"
 
 
+static const tcm8230_cfg_t cfg =
+{
+    .picsize = TCM8230_PICSIZE_SQCIF
+};
+
+
+static uint8_t image[SQCIF_WIDTH * SQCIF_HEIGHT * 2];
+
 int
 main (void)
 {
-    tcm8230_init (TCM8230_PICSIZE_SQCIF);
+    tcm8230_init (&cfg);
 
     while (1)
-        continue;
+    {
+        tcm8230_capture (image, sizeof(image));
+    }
 }
