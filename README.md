@@ -18,3 +18,9 @@ With earlier versions of Git use:
     cd mmcudemo
     git submodule update --init
 
+
+Updating is a nuisance since each submodule needs to be pulled
+separately.  This can be achieved using:
+
+    git pull && git submodule foreach git pull
+
