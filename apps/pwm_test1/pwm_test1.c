@@ -42,10 +42,6 @@ main (void)
     pwm1 = pwm_init (&pwm1_cfg);
     pwm2 = pwm_init (&pwm2_cfg);
 
-    /* Switch PIOs to be PWM pins.  */
-    pwm_enable (pwm1);
-    pwm_enable (pwm2);
-
     pwm_start (pwm1);
     pwm_start (pwm2);
 
