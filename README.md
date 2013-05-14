@@ -22,5 +22,8 @@ With earlier versions of Git use:
 Updating is a nuisance since each submodule needs to be pulled
 separately.  This can be achieved using:
 
-    git pull && git submodule foreach git pull
+    git pull && git submodule update
+
+Note, the submodules mmculib and mat91lib have detached heads.
+
 
