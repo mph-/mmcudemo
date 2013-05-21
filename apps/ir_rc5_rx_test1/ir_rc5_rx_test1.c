@@ -58,10 +58,11 @@ main (void)
     {
         uint8_t system;
         uint8_t code;
+        uint8_t toggle;
         ir_rc5_rx_ret_t status;
         
         /* Poll the IR driver.  */
-        status = ir_rc5_rx_read (&system, &code);
+        status = ir_rc5_rx_read (&system, &code, &toggle);
         if (status == IR_RC5_RX_OK)
 	    led_set (leds[1], 1);
     }
