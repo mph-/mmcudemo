@@ -4,17 +4,7 @@
    Descr: 
 */
 #include "led.h"
-#include "pacer.h"
 #include "pio.h"
-#include "ir_rc5_rx.h"
-
-
-/* Define how fast ticks occur.  This must be faster than
-   TICK_RATE_MIN.  */
-enum {LOOP_POLL_RATE = 200};
-
-/* Define LED flash rate in Hz.  */
-enum {LED_FLASH_RATE = 2};
 
 
 /* Define LEDs configuration.  */
@@ -38,11 +28,8 @@ main (void)
 {
     led_t leds[LEDS_NUM];
     uint8_t i;
-    uint8_t flash_ticks;
 
-
-    /* Initialise IR driver.  */
-    ir_rc5_rx_init ();
+    pio_init ();
 
     /* Initialise LEDs.  */
     for (i = 0; i < LEDS_NUM; i++)
@@ -51,19 +38,12 @@ main (void)
     led_set (leds[0], 1);
     led_set (leds[1], 0);
 
-    pacer_init (LOOP_POLL_RATE);
-    flash_ticks = 0;
+    /* Configure IR receiver PIO as input.  */
+    pio_config_set (IR_RC5_RX_PIO, PIO_INPUT);
 
     while (1)
     {
-        uint8_t system;
-        uint8_t code;
-        ir_rc5_rx_ret_t status;
-        
-        /* Poll the IR driver.  */
-        status = ir_rc5_rx_read (&system, &code);
-        if (status == IR_RC5_RX_OK)
-	    led_set (leds[1], 1);
+        led_set (leds[1], pio_input_get (IR_RC5_RX_PIO));
     }
 }
 
