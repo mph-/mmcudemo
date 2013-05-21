@@ -4,17 +4,8 @@
    Descr: 
 */
 #include "led.h"
-#include "pacer.h"
 #include "pio.h"
 #include "ir_sirc_rx.h"
-
-
-/* Define how fast ticks occur.  This must be faster than
-   TICK_RATE_MIN.  */
-enum {LOOP_POLL_RATE = 200};
-
-/* Define LED flash rate in Hz.  */
-enum {LED_FLASH_RATE = 2};
 
 
 /* Define LEDs configuration.  */
@@ -38,8 +29,6 @@ main (void)
 {
     led_t leds[LEDS_NUM];
     uint8_t i;
-    uint8_t flash_ticks;
-
 
     /* Initialise IR driver.  */
     ir_sirc_rx_init ();
@@ -48,33 +37,16 @@ main (void)
     for (i = 0; i < LEDS_NUM; i++)
 	leds[i] = led_init (&leds_cfg[i]);
 
-    led_set (leds[0], 0);
+    led_set (leds[0], 1);
     led_set (leds[1], 0);
-
-    pacer_init (LOOP_POLL_RATE);
-    flash_ticks = 0;
 
     while (1)
     {
-        uint8_t command;
-        uint16_t address;
-        ir_sirc_rx_ret_t status;
+        int16_t data;
         
-	/* Wait until next clock tick.  */
-	pacer_wait ();
-
         /* Poll the IR driver.  */
-        status = ir_sirc_rx_read (&command, &address);
-        if (status == IR_SIRC_RX_OK)
+        data = ir_sirc_rx_read ();
+        if (data > 0)
 	    led_set (leds[1], 1);
-
-	flash_ticks++;
-	if (flash_ticks >= LOOP_POLL_RATE / (LED_FLASH_RATE * 2))
-	{
-	    flash_ticks = 0;
-
-	    led_toggle (leds[0]);
-	}
     }
 }
-
