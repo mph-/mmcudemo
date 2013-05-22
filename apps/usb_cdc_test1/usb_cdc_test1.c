@@ -11,7 +11,6 @@ int main (void)
 {
     int ticks = 0;
     int count = 0;
-
     usb_cdc_t usb_cdc;
 
     usb_cdc = usb_cdc_init ();
