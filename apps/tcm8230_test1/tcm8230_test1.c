@@ -21,6 +21,6 @@ main (void)
 
     while (1)
     {
-        tcm8230_capture (image, sizeof(image));
+        tcm8230_capture (image, sizeof(image), ~0);
     }
 }
