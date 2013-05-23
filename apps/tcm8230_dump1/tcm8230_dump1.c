@@ -15,11 +15,15 @@ static const led_cfg_t leds_cfg[] =
 {
     {
         .pio = LED1_PIO,
-        .active = 1
+        .active = 0
     },
     {
         .pio = LED2_PIO,
-        .active = 1
+        .active = 0
+    },
+    {
+        .pio = LED3_PIO,
+        .active = 0
     }
 };
 
@@ -40,11 +44,13 @@ static void image_dump (uint8_t *image, unsigned int rows, unsigned int cols)
     unsigned int row;
     unsigned int col;
 
+    printf ("**************\r\n");
     for (row = 0; row < rows; row++)
     {
         printf ("%3d: ", row);
         for (col = 0; col < cols * 2; col++)
             printf ("%3d, ", image[row * cols * 2 + col]);
+        printf ("\r\n");
     }
     printf ("\r\n");
 }
@@ -63,6 +69,7 @@ main (void)
 
     led_set (leds[0], 0);
     led_set (leds[1], 0);
+    led_set (leds[2], 0);
 
     usb_cdc = usb_cdc_init ();
     
@@ -82,20 +89,33 @@ main (void)
     {
         int32_t ret;
 
-        led_set (leds[1], 0);
+        led_set (leds[1], 1);
+        while ( tcm8230_frame_ready_p ())
+            continue;
 
+        led_set (leds[1], 0);
         while (! tcm8230_frame_ready_p ())
             continue;
 
         led_set (leds[1], 1);
 
         ret = tcm8230_capture (image, sizeof(image), 200);
-        if (ret < 0)
-            fprintf (stderr, "TCM8230 error: %d", (int)ret);
 
-        image_dump(image, SQCIF_HEIGHT, SQCIF_WIDTH);
+        if (usb_cdc_update ())
+        {
+            led_set (leds[0], 1);
+            led_set (leds[2], 1);
 
-        /* Check if USB diconnected.  */
-        led_set (leds[0], usb_cdc_update ());
+            if (ret < 0)
+                fprintf (stderr, "TCM8230 error: %d\r\n", (int)ret);
+            else
+                image_dump(image, SQCIF_HEIGHT, SQCIF_WIDTH);
+            led_set (leds[2], 0);
+        }
+        else
+        {
+            /* USB disconnected.  */
+            led_set (leds[0], 0);
+        }
     }
 }
