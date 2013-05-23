@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib.pyplot import figure, show, savefig
 
+# Camera data bus mapping, lsb first
 bits = (0, 7, 6, 4, 1, 5, 3, 2)
 
 pixmap = np.zeros(256, dtype=int)
@@ -14,7 +15,7 @@ for m in range(256):
     pixmap[m] = new
 
 
-imfile = open('/tmp/pic2.txt')
+imfile = open('/tmp/pic4.txt')
 #imfile = open('/tmp/tmp.img')
 lines = imfile.readlines()
 height = len(lines)
