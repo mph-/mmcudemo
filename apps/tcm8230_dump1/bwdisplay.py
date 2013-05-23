@@ -17,7 +17,7 @@ for m in range(256):
 
 #imfile = open('/tmp/tmp.img')
 #imfile = open('/tmp/pic2.txt')
-imfile = open('/tmp/pic4.txt')
+imfile = open('/tmp/pic3.txt')
 lines = imfile.readlines()
 height = len(lines)
 

@@ -15,7 +15,7 @@ for m in range(256):
     pixmap[m] = new
 
 
-imfile = open('/tmp/pic4.txt')
+imfile = open('/tmp/pic3.txt')
 #imfile = open('/tmp/tmp.img')
 lines = imfile.readlines()
 height = len(lines)
@@ -34,11 +34,12 @@ for r, line in enumerate(lines):
     for p in range(width):
         x, y = raw[p * 2], raw[p * 2 + 1]
         red = x >> 3
-        green = (x & 7) + (y >> 5)
+        green = ((x & 7) << 3) + (y >> 5)
+        green = (x & 7) + ((y >> 5) << 3)
         blue = y & 31
         pix = (red + green + blue) * 2
-        if pix > 127:
-            pix = 127
+#        if pix > 127:
+#            pix = 127
         image[p, r] = pix
 
 
