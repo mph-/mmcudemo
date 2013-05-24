@@ -7,8 +7,8 @@
 #include <string.h>
 
 
-#define SDA_PIO PIO_DEFINE(PORT_A, 8)
-#define SCL_PIO PIO_DEFINE(PORT_A, 9)
+#define SDA_PIO PIO_DEFINE(PORT_A, 5)
+#define SCL_PIO PIO_DEFINE(PORT_A, 6)
 
 static const i2c_bus_cfg_t i2c_bus_cfg =
 {

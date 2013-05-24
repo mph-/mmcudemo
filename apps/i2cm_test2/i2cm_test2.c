@@ -42,6 +42,10 @@ main (void)
         pacer_wait ();
 
         i2c_master_addr_write (i2c_slave1, addr, 1, tx, sizeof(tx));
+
+        i2c_master_addr_read (i2c_slave1, addr, 1, rx, sizeof(rx));
+
+        /* TODO: check if rx matches tx.  */
     }
 }
 
