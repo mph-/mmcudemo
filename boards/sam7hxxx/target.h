@@ -22,4 +22,6 @@
 #define LED1_PIO PIO_DEFINE(PORT_A, 28)
 #define LED2_PIO PIO_DEFINE(PORT_A, 29)
 
+#define UDP_PULLUP_PIO PIO_DEFINE(PORT_A, 31)
+
 #endif /* TARGET_H  */
