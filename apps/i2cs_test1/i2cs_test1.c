@@ -27,7 +27,7 @@ int
 main (void)
 {
     i2c_t i2c_slave1;
-    int data[] = {0, 1, 2, 3};
+    uint8_t data[] = {0, 1, 2, 3};
 
     i2c_slave1 = i2c_slave_init (&i2c_bus_cfg, &i2c_slave1_cfg);
 
