@@ -10,8 +10,8 @@
 #include <string.h>
 
 
-#define SDA_PIO PIO_DEFINE(PORT_A, 5)
-#define SCL_PIO PIO_DEFINE(PORT_A, 6)
+#define SDA_PIO PIO_DEFINE(PORT_A, 3)
+#define SCL_PIO PIO_DEFINE(PORT_A, 4)
 
 static const i2c_bus_cfg_t i2c_bus_cfg =
 {
@@ -41,7 +41,7 @@ main (void)
     sys_redirect_stdout ((void *)usb_cdc_write, usb_cdc);
     sys_redirect_stderr ((void *)usb_cdc_write, usb_cdc);
 
-#if 0
+#if 1
     /* Wait until USB configured.  */
     while (! usb_cdc_update ())
         continue;
