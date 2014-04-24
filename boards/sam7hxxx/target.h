@@ -19,9 +19,9 @@
 #define F_CPU (F_PLL / 2)
 
 
-#define LED1_PIO PIO_DEFINE(PORT_A, 7)
-#define LED2_PIO PIO_DEFINE(PORT_A, 8)
+#define LED1_PIO PA7_PIO
+#define LED2_PIO PA8_PIO
 
-#define UDP_PULLUP_PIO PIO_DEFINE(PORT_A, 31)
+#define UDP_PULLUP_PIO PA31_PIO
 
 #endif /* TARGET_H  */
