@@ -1,7 +1,7 @@
 /* File:   ledflash1.c
    Author: M. P. Hayes, UCECE
    Date:   15 May 2007
-   Descr: 
+   Descr:  Flash an LED
 */
 #include <pio.h>
 #include "target.h"
@@ -38,7 +38,7 @@ main (void)
 	{
 	    flash_ticks = 0;
 
-	    /* Toggle LEDs.  */
+	    /* Toggle LED.  */
 	    pio_output_toggle (LED1_PIO);
 	}
     }
