@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "usb_cdc.h"
+#include "pio.h"
 #include "sys.h"
 #include "pacer.h"
 
@@ -10,6 +11,9 @@
 int main (void)
 {
     usb_cdc_t usb_cdc;
+
+    pio_config_set (LED1_PIO, PIO_OUTPUT_LOW);                
+    pio_config_set (LED2_PIO, PIO_OUTPUT_LOW);                
 
     usb_cdc = usb_cdc_init ();
     
@@ -28,18 +32,33 @@ int main (void)
 
     while (1)
     {
-        char buffer[80];
-
         pacer_wait ();
 
         if (usb_cdc_read_ready_p (usb_cdc))
         {
-            fgets (buffer, 80, stdin);
+            char ch;
 
-            fputs (buffer, stdout);
+            ch = fgetc (stdin);
+            fputc (ch, stderr);
+            if (ch == '\r')
+                fputc ('\n', stderr);
+
+            switch (ch)
+            {
+            case '0':
+                pio_output_set (LED2_PIO, 0);
+                break;
+
+            case '1':
+                pio_output_set (LED2_PIO, 1);
+                break;
+
+            default:
+                break;
+            }
         }
 
-        /* Check is USB disconnected.  */
-        usb_cdc_update ();
+        /* Check if USB disconnected.  */
+        pio_output_set (LED1_PIO, usb_cdc_update ());
     }
 }

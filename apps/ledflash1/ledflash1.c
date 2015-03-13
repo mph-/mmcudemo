@@ -14,8 +14,6 @@ enum {LOOP_POLL_RATE = 200};
 /* Define LED flash rate in Hz.  */
 enum {LED_FLASH_RATE = 2};
 
-#define LED1_PIO PA8_PIO
-
 
 int
 main (void)

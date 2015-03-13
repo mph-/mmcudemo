@@ -10,11 +10,11 @@
 
 /* CPU clocks  */
 #define F_XTAL 18432000.0
-#define CPU_PLL_MUL 125
-#define CPU_PLL_DIV 24
-#define CPU_USB_DIV 2
+#define MCU_PLL_MUL 125
+#define MCU_PLL_DIV 24
+#define MCUUSB_DIV 2
 /* 96 MHz  */
-#define F_PLL (F_XTAL / CPU_PLL_DIV * CPU_PLL_MUL)
+#define F_PLL (F_XTAL / MCU_PLL_DIV * MCU_PLL_MUL)
 /* 48 MHz  */
 #define F_CPU (F_PLL / 2)
 
