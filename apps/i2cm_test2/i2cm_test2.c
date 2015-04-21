@@ -6,8 +6,8 @@
 #include "i2c_master.h"
 #include "pacer.h"
 
-#define SDA_PIO PIO_DEFINE(PORT_A, 3)
-#define SCL_PIO PIO_DEFINE(PORT_A, 4)
+#define SDA_PIO PA3_PIO
+#define SCL_PIO PA4_PIO
 
 #define PACER_RATE 10
 

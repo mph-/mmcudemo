@@ -9,7 +9,7 @@
 #include "extint.h"
 
 
-#define EXTINT1_PIO PIO_DEFINE (PORT_A, 30)
+#define EXTINT1_PIO PA30_PIO
 
 
 /* Define LED configuration.  */

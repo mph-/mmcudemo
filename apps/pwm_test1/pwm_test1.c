@@ -7,8 +7,8 @@
 #include "pio.h"
 
 
-#define PWM1_PIO PIO_DEFINE (PORT_A, 1)
-#define PWM2_PIO PIO_DEFINE (PORT_A, 2)
+#define PWM1_PIO PA1_PIO
+#define PWM2_PIO PA2_PIO
 
 #define PWM1_FREQ_HZ 100e3
 #define PWM2_FREQ_HZ 50e3
