@@ -10,7 +10,7 @@ TARGET = usb_cdc_test2.bin
 
 SRC = usb_cdc_test2.c
 
-include ../../boards/sam7hxxx/board.mk
+include ../../boards/board.mk
 include $(MMCULIB_DIR)/mmculib.mk
 
 

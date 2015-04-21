@@ -30,10 +30,6 @@ int main (void)
     {
         pacer_wait ();
 
-        /* This needs to be periodically called to poll the USB
-           connection.  */
-        usb_cdc_update ();
-        
         ticks++;
         if (ticks > PACER_RATE / SPAM_RATE)
         {

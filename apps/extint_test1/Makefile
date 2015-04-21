@@ -12,7 +12,7 @@ TARGET = extint_test1.bin
 
 SRC = extint_test1.c
 
-include ../../boards/sam7hxxx/board.mk
+include ../../boards/board.mk
 include $(MMCULIB_DIR)/mmculib.mk
 
 
