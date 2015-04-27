@@ -29,7 +29,7 @@ enum {LINEBUFFER_SIZE = 80};
 
 static int char_count = 0;
 static char linebuffer[LINEBUFFER_SIZE];
-static twi_mode_t mode = TWI_MODE_MASTER;
+static twi_mode_t mode = TWI_MODE_SLAVE;
 static twi_t twi;
 
 static void
@@ -39,6 +39,7 @@ process_command (void)
     uint8_t addr = 0;
     char *msg;
     char message[16];
+    twi_ret_t ret;
     
     ch = fgetc (stdin);
     fputc (ch, stderr);
@@ -63,7 +64,7 @@ process_command (void)
 
     case 's':
         mode = TWI_MODE_SLAVE;
-        fprintf (stderr, "Slave mode on address %d\n", SLAVE_ADDR);
+        fprintf (stderr, "Slave listening on address %d\n", SLAVE_ADDR);
         break;
 
     case 'w':
@@ -73,13 +74,17 @@ process_command (void)
         msg = index (linebuffer + 1, ' ');
         if (!msg)
         {
-            fprintf(stderr, "Syntax error, missing space\n");
+            fprintf (stderr, "Syntax error, missing space\n");
             return;
         }
         msg++;
         strncpy (message, msg, sizeof (message));
-        twi_master_addr_write (twi, SLAVE_ADDR, addr, 1, message, sizeof(message));
-        fprintf (stderr, "Master wrote %d: %s\n", addr, message);        
+        ret = twi_master_addr_write (twi, SLAVE_ADDR, addr, 1, message,
+                                     sizeof (message));
+        if (ret == sizeof (message))
+            fprintf (stderr, "Master write %d: %s\n", addr, message);        
+        else
+            fprintf (stderr, "Master write %d: error %d\n", addr, ret);        
         break;
 
 
@@ -90,13 +95,17 @@ process_command (void)
         msg = index (linebuffer + 1, ' ');
         if (!msg)
         {
-            fprintf(stderr, "Syntax error, missing space\n");
+            fprintf (stderr, "Syntax error, missing space\n");
             return;
         }
         msg++;
         /* NB, this blocks.  FIXME.  */
-        twi_master_addr_read (twi, SLAVE_ADDR, addr, 1, message, sizeof(message));
-        fprintf (stderr, "Master read %d: %s\n", addr, message);        
+        ret = twi_master_addr_read (twi, SLAVE_ADDR, addr, 1, message,
+                                    sizeof (message));
+        if (ret == sizeof (message))
+            fprintf (stderr, "Master read %d: %s\n", addr, message);        
+        else
+            fprintf (stderr, "Master read %d: error %d\n", addr, ret);        
         break;
         
     default:
@@ -120,7 +129,7 @@ process_twi_slave (twi_t twi)
     switch (state)
     {
     case STATE_ADDR:
-        if (twi_slave_read (twi, &addr, sizeof(addr)) == sizeof(addr))
+        if (twi_slave_read (twi, &addr, sizeof (addr)) == sizeof (addr))
             state = STATE_DATA;
         break;
             
@@ -128,18 +137,24 @@ process_twi_slave (twi_t twi)
         state = STATE_ADDR;
         if (ret == TWI_READ)
         {
-            twi_slave_read (twi, message, sizeof(message));
-            fprintf (stderr, "Slave read %d: %s\n", addr, message);
+            ret = twi_slave_read (twi, message, sizeof (message));
+            if (ret == sizeof (message))
+                fprintf (stderr, "Slave read %d: %s\n", addr, message);
+            else
+                fprintf (stderr, "Slave read %d: error %d\n", addr, ret);        
         }
         else if (ret == TWI_WRITE)
         {
             strcpy (message, "Hello world!");
-            twi_slave_write (twi, message, sizeof(message));
-            fprintf (stderr, "Slave wrote %d: %s\n", addr, message);
+            ret = twi_slave_write (twi, message, sizeof (message));
+            if (ret == sizeof (message))
+                fprintf (stderr, "Slave write %d: %s\n", addr, message);
+            else
+                fprintf (stderr, "Slave write %d: error %d\n", addr, ret);        
+
         }
     }
 }
-
 
 
 int main (void)
@@ -162,10 +177,9 @@ int main (void)
         continue;
     pio_config_set (USB_LED_PIO, PIO_OUTPUT_HIGH);                
 
+    fprintf (stderr, "Slave listening on address %d\n", SLAVE_ADDR);
+
     pacer_init (PACER_RATE);
-
-    printf ("Hello world!\n");
-
     while (1)
     {
         pacer_wait ();
