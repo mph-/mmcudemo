@@ -88,7 +88,7 @@ process_command (void)
         msg = index (linebuffer + 1, ' ');
         if (!msg)
         {
-            fprintf (stderr, "Syntax error, missing space\n");
+            fprintf (stderr, "Syntax error, w addr message\n");
             return;
         }
         msg++;
@@ -108,7 +108,7 @@ process_command (void)
         msg = index (linebuffer + 1, ' ');
         if (!msg)
         {
-            fprintf (stderr, "Syntax error, missing space\n");
+            fprintf (stderr, "Syntax error, r addr message\n");
             return;
         }
         msg++;
