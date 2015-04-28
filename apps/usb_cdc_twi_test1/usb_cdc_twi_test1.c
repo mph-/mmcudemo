@@ -1,3 +1,11 @@
+/* File:   usbd_cdc_twi_test1.c
+   Author: M. P. Hayes, UCECE
+   Date:   27 April 2015
+   Descr:  This program requires two instances communicating via TWI
+   with USB CDC operating to provide a command line interface.  By default,
+   the program acts as a slave but messages can be read/written as a master
+   using the r and w commands.  The s command switches back to slave mode.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +17,8 @@
 
 
 #define PACER_RATE 1000
+
+#define TIMEOUT_US 2000
 
 #define SLAVE_ADDR 0x42
 #define CLOCK_SPEED 40e3
@@ -62,6 +72,10 @@ process_command (void)
         pio_output_set (GENERAL_LED_PIO, 1);
         break;
 
+    case 'h':
+        fprintf (stderr, "Hello world!\n");
+        break;
+
     case 's':
         mode = TWI_MODE_SLAVE;
         fprintf (stderr, "Slave listening on address %d\n", SLAVE_ADDR);
@@ -87,7 +101,6 @@ process_command (void)
             fprintf (stderr, "Master write %d: error %d\n", addr, ret);        
         break;
 
-
     case 'r':
         mode = TWI_MODE_MASTER;
 
@@ -99,9 +112,9 @@ process_command (void)
             return;
         }
         msg++;
-        /* NB, this blocks.  FIXME.  */
-        ret = twi_master_addr_read (twi, SLAVE_ADDR, addr, 1, message,
-                                    sizeof (message));
+        /* NB, this blocks while the slave gets its act together.  */
+        ret = twi_master_addr_read_timeout (twi, SLAVE_ADDR, addr, 1, message,
+                                            sizeof (message) , TIMEOUT_US);
         if (ret == sizeof (message))
             fprintf (stderr, "Master read %d: %s\n", addr, message);        
         else
@@ -118,6 +131,7 @@ static void
 process_twi_slave (twi_t twi)
 {
     static state_t state = STATE_ADDR;
+    static int write_count = 0;
     static uint8_t addr = 0;
     static char message[16];
     twi_ret_t ret;
@@ -145,7 +159,7 @@ process_twi_slave (twi_t twi)
         }
         else if (ret == TWI_WRITE)
         {
-            strcpy (message, "Hello world!");
+            sprintf (message, "Hello world! %d", write_count++);
             ret = twi_slave_write (twi, message, sizeof (message));
             if (ret == sizeof (message))
                 fprintf (stderr, "Slave write %d: %s\n", addr, message);
