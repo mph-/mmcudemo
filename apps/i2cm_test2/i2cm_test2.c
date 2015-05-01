@@ -11,16 +11,12 @@
 
 #define PACER_RATE 10
 
+#define SLAVE_ADDR 0x32
+
 static const i2c_bus_cfg_t i2c_bus_cfg =
 {
     .scl = SCL_PIO,
     .sda = SDA_PIO
-};
-
-
-static const i2c_slave_cfg_t i2c_slave1_cfg =
-{
-    .id = 0x32,
 };
 
 
@@ -29,7 +25,7 @@ main (void)
 {
     i2c_t i2c_slave1;
 
-    i2c_slave1 = i2c_master_init (&i2c_bus_cfg, &i2c_slave1_cfg);
+    i2c_slave1 = i2c_master_init (&i2c_bus_cfg);
 
     pacer_init (PACER_RATE);
 
@@ -41,9 +37,9 @@ main (void)
 
         pacer_wait ();
 
-        i2c_master_addr_write (i2c_slave1, addr, 1, tx, sizeof(tx));
+        i2c_master_addr_write (i2c_slave1, SLAVE_ADDR, addr, 1, tx, sizeof(tx));
 
-        i2c_master_addr_read (i2c_slave1, addr, 1, rx, sizeof(rx));
+        i2c_master_addr_read (i2c_slave1, SLAVE_ADDR, addr, 1, rx, sizeof(rx));
 
         /* TODO: check if rx matches tx.  */
     }
