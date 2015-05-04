@@ -11,6 +11,6 @@ TARGET = gsm_usb_test1.bin
 SRC = gsm_usb_test1.c
 
 include ../../boards/sam7hxxx-gsm/board.mk
-include $(MMCULIB_DIR)/mmculib.mk
+
 
 

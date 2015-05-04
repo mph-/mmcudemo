@@ -11,6 +11,6 @@ TARGET = busart_echo2.bin
 SRC = busart_echo2.c
 
 include ../../boards/sam7hxxx-tcm8230/board.mk
-include $(MMCULIB_DIR)/mmculib.mk
+
 
 
