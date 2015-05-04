@@ -20,8 +20,6 @@ main (void)
 {
     uint8_t flash_ticks;
 
-    pio_init (UDP_VBUS_PIO);
-
     /* Configure LED PIO as output.  */
     pio_config_set (LED1_PIO, PIO_OUTPUT_LOW);
     pio_config_set (LED2_PIO, PIO_OUTPUT_LOW);
