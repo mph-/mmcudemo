@@ -1,9 +1,13 @@
+from optparse import OptionParser
+import sys
+import os
 import numpy as np
 from matplotlib.pyplot import figure, show, savefig
 
 # Camera data bus mapping, lsb first
-bits = (0, 7, 6, 4, 1, 5, 3, 2)
+bits = (0, 1, 2, 3, 4, 5, 6, 7)
 
+# Create lookup table
 pixmap = np.zeros(256, dtype=int)
 
 for m in range(256):
@@ -15,38 +19,51 @@ for m in range(256):
     pixmap[m] = new
 
 
-imfile = open('/tmp/pic3.txt')
-#imfile = open('/tmp/tmp.img')
-lines = imfile.readlines()
-height = len(lines)
+def image_display(filename):
 
-image = None
+    imfile = open(filename)
+    lines = imfile.readlines()
 
-for r, line in enumerate(lines):
-    (row, rowdata) = line.strip().split(':')
-    raw = [pixmap[int(pix)] for pix in rowdata.split(',')[0: -1]]
+    height = len(lines)
+    cimage = None
 
-    width = len(raw) / 2
+    for r, line in enumerate(lines):
+        (row, rowdata) = line.strip().split(':')
 
-    if image == None:
-        image = np.zeros((width, height), dtype=int)
+        # Remap data if bits are scrambled.
+        raw = [pixmap[int(pix)] for pix in rowdata.split(',')[0: -1]]
 
-    for p in range(width):
-        x, y = raw[p * 2], raw[p * 2 + 1]
-        red = x >> 3
-        green = ((x & 7) << 3) + (y >> 5)
-        green = (x & 7) + ((y >> 5) << 3)
-        blue = y & 31
-        pix = (red + green + blue) * 2
-#        if pix > 127:
-#            pix = 127
-        image[p, r] = pix
+        width = len(raw) / 2
+
+        if cimage is None:
+            cimage = np.zeros((width, height, 3), dtype=int)
+            
+        for p in range(width):
+            x, y = raw[p * 2], raw[p * 2 + 1]
+            red = (y >> 3) * 255 / 31
+            green = (((y & 7) << 3) | (x >> 5)) * 255 / 63
+            blue = (x & 31) * 255 / 31
+
+            cimage[p, r, :] = (255 - red, 255 - green, 255 - blue)
+
+    fig = figure()
+    ax = fig.add_subplot(111)
+    ax.imshow(cimage)
+
+    show()
 
 
+def main (argv=None):
 
-fig = figure()
-ax = fig.add_subplot(111)
-ax.imshow(image.T, cmap='gray')
-show()
+    if argv is None:
+        argv = sys.argv
+        
+    if len(argv) < 2:
+        raise ValueError('Missing filename')
+
+    image_display(argv[1])
+    return 0
 
 
+if __name__ == '__main__':
+    sys.exit(main())
