@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include "busart.h"
 
+/* This can be 0 or 1.  */
+#define BUSART_DEVICE 1
 
 int main (void)
 {
@@ -13,7 +15,8 @@ int main (void)
     char rxbuffer[64];
     busart_t busart;
 
-    busart = busart_init (1, BUSART_BAUD_DIVISOR (57600),
+    busart = busart_init (BUSART_DEVICE,
+                          BUSART_BAUD_DIVISOR (57600),
                           txbuffer, sizeof (txbuffer),
                           rxbuffer, sizeof (rxbuffer));
     

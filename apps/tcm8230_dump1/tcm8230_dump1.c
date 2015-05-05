@@ -32,7 +32,8 @@ enum {LEDS_NUM = ARRAY_SIZE (leds_cfg)};
 
 static const tcm8230_cfg_t cfg =
 {
-    .picsize = TCM8230_PICSIZE_SQCIF
+    .picsize = TCM8230_PICSIZE_SQCIF,
+    .colour = 1
 };
 
 
