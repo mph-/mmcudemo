@@ -37,7 +37,7 @@ main (void)
 	/* Wait until next clock tick.  */
 	pacer_wait ();
 
-        twi_master_write (twi, SLAVE_ADDR, 1, 1, message1, sizeof(message1));
-        twi_master_write (twi, SLAVE_ADDR, 2, 1, message2, sizeof(message2));
+        twi_master_addr_write (twi, SLAVE_ADDR, 1, 1, message1, sizeof(message1));
+        twi_master_addr_write (twi, SLAVE_ADDR, 2, 1, message2, sizeof(message2));
     }
 }
