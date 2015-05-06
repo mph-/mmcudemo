@@ -1,6 +1,6 @@
 # This will build/clean all the apps
 
-APPDIRS = $(wildcard *)
+APPDIRS = $(wildcard */)
 MAKEDIRS = $(addsuffix .all, $(APPDIRS))
 CLEANDIRS = $(addsuffix .clean, $(APPDIRS))
 
