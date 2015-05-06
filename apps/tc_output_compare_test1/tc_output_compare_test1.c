@@ -7,12 +7,14 @@
 #include "pio.h"
 
 #define CLOCK_FREQUENCY 10e3
+#define CLOCK_PRESCALE 2
 
 static const tc_cfg_t tc_cfg =
 {
     .pio = TIOA0_PIO,
     .mode = TC_MODE_CLOCK,
-    .period = TC_PERIOD_DIVISOR (CLOCK_FREQUENCY)
+    .frequency = CLOCK_FREQUENCY,
+    .prescale = CLOCK_PRESCALE
 };
 
 
