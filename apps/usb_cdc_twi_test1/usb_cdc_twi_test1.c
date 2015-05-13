@@ -29,7 +29,8 @@
 
 static const twi_cfg_t twi_cfg =
 {
-    .period = TWI_PERIOD_DIVISOR (CLOCK_SPEED)
+    .period = TWI_PERIOD_DIVISOR (CLOCK_SPEED),
+    .slave_addr = SLAVE_ADDR
 };
 
 
