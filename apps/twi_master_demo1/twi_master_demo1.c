@@ -13,7 +13,7 @@ enum {LOOP_POLL_RATE = 2};
 
 #define SLAVE_ADDR 0x42
 
-#define CLOCK_SPEED 40e3
+#define CLOCK_SPEED 100e3
 
 
 static const twi_cfg_t twi_cfg =
