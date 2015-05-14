@@ -9,7 +9,8 @@ OPT = -Os
 MMCULIB_DIR = ../../mmculib
 
 ifndef BOARD
-BOARD = sam4sbasic2
+#BOARD = sam4sbasic2
+BOARD = sam4sbasic1
 endif
 
 include ../../boards/$(BOARD)/board.mk
