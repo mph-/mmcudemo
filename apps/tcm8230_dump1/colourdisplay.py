@@ -6,6 +6,7 @@ from matplotlib.pyplot import figure, show, savefig
 
 # Camera data bus mapping, lsb first
 bits = (0, 1, 2, 3, 4, 5, 6, 7)
+#bits = (7, 6, 5, 1, 4, 3, 0, 2)
 
 # Create lookup table
 pixmap = np.zeros(256, dtype=int)
