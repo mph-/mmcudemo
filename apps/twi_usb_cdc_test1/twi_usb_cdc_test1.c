@@ -86,17 +86,17 @@ process_command (void)
         mode = TWI_MODE_MASTER;
 
         msg = linebuffer + 1;
-        while (isspace (*msg))
+        while (*msg == ' ')
             msg++;
 
         addr = strtoul (msg, &msg, 10);
-        if (! isspace (*msg))
+        if (*msg != ' ')
         {
             fprintf (stderr, "Syntax error, w addr message\n");
             return;
         }
 
-        while (isspace (*msg))
+        while (*msg == ' ')
             msg++;
 
         strncpy (message, msg, sizeof (message));
@@ -135,44 +135,49 @@ process_twi_slave (twi_t twi)
     static int write_count = 0;
     static uint8_t addr = 0;
     static char message[16];
+    static char buffer[17];
     twi_ret_t ret;
 
     ret = twi_slave_poll (twi);
-    if (ret == 0)
+    switch (ret)
+    {
+        /* Nothing doing...  */
+    case TWI_OK:
         return;
 
-    /* ret can either be TWI_READ for a master read or TWI_WRITE for
-       for a master read.  */
-
-    switch (state)
-    {
-    case STATE_ADDR:
-        ret = twi_slave_read (twi, &addr, sizeof (addr));
+        /* Master write.  */
+    case TWI_WRITE:
+        ret = twi_slave_read (twi, buffer, sizeof (buffer));
+        /* A short packet is just an address.
+           A long packet is an address plus a message.  */
+        addr = buffer[0];
         if (ret < 0)
-            fprintf (stderr, "Slave address read error %d\n", ret);
-        if (ret == sizeof (addr))
-            state = STATE_DATA;
+            fprintf (stderr, "Slave read %d: error %d\n", addr, ret);
+        else if (ret == 1)
+        {
+            fprintf (stderr, "Slave read addr %d\n", addr);
+
+            /* TODO should immediately check for a read message.  */
+        }
+        else
+        {
+            fprintf (stderr, "Slave read %d: %s\n", addr, buffer + 1);
+        }
         break;
-            
-    case STATE_DATA:
-        state = STATE_ADDR;
-        if (ret == TWI_WRITE)
-        {
-            ret = twi_slave_read (twi, message, sizeof (message));
-            if (ret == sizeof (message))
-                fprintf (stderr, "Slave read %d: %s\n", addr, message);
-            else
-                fprintf (stderr, "Slave read %d: error %d\n", addr, ret);
-        }
-        else if (ret == TWI_READ)
-        {
-            sprintf (message, "Hello world! %d", write_count++);
-            ret = twi_slave_write (twi, message, sizeof (message));
-            if (ret == sizeof (message))
-                fprintf (stderr, "Slave write %d: %s\n", addr, message);
-            else
-                fprintf (stderr, "Slave write %d: error %d\n", addr, ret);
-        }
+
+        /* Master read.  */
+    case TWI_READ:
+        sprintf (message, "Hello world! %d", write_count++);
+        ret = twi_slave_write (twi, message, sizeof (message));
+        if (ret == sizeof (message))
+            fprintf (stderr, "Slave write %d: %s\n", addr, message);
+        else
+            fprintf (stderr, "Slave write %d: error %d\n", addr, ret);
+        break;
+    
+    default:
+        fprintf (stderr, "Slave poll error %d\n", ret);
+        break;
     }
 }
 
@@ -202,7 +207,9 @@ int main (void)
     pacer_init (PACER_RATE);
     while (1)
     {
-        pacer_wait ();
+        /*  The slave will miss some reads and get screwed up if wait too long
+            between reading address and sending message.  */
+        // pacer_wait ();
 
         if (usb_cdc_read_ready_p (usb_cdc))
             process_command ();
