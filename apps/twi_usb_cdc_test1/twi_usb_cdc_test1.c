@@ -18,7 +18,7 @@
 
 #define PACER_RATE 1000
 
-#define TIMEOUT_US 2000
+#define TIMEOUT_US 20000
 
 #define SLAVE_ADDR 0x42
 #define CLOCK_SPEED 100e3
