@@ -85,14 +85,20 @@ process_command (void)
     case 'w':
         mode = TWI_MODE_MASTER;
 
-        addr = atoi (linebuffer + 1);
-        msg = index (linebuffer + 1, ' ');
-        if (!msg)
+        msg = linebuffer + 1;
+        while (isspace (*msg))
+            msg++;
+
+        addr = strtoul (msg, &msg, 10);
+        if (! isspace (*msg))
         {
             fprintf (stderr, "Syntax error, w addr message\n");
             return;
         }
-        msg++;
+
+        while (isspace (*msg))
+            msg++;
+
         strncpy (message, msg, sizeof (message));
         ret = twi_master_addr_write (twi, SLAVE_ADDR, addr, 1, message,
                                      sizeof (message));
@@ -105,17 +111,11 @@ process_command (void)
     case 'r':
         mode = TWI_MODE_MASTER;
 
-        addr = atoi (linebuffer + 1);
-        msg = index (linebuffer + 1, ' ');
-        if (!msg)
-        {
-            fprintf (stderr, "Syntax error, r addr message\n");
-            return;
-        }
-        msg++;
+        addr = strtoul (linebuffer + 1, &msg, 10);
+
         /* NB, this blocks while the slave gets its act together.  */
         ret = twi_master_addr_read_timeout (twi, SLAVE_ADDR, addr, 1, message,
-                                            sizeof (message) , TIMEOUT_US);
+                                            sizeof (message), TIMEOUT_US);
         if (ret == sizeof (message))
             fprintf (stderr, "Master read %d: %s\n", addr, message);        
         else
@@ -141,32 +141,37 @@ process_twi_slave (twi_t twi)
     if (ret == 0)
         return;
 
+    /* ret can either be TWI_READ for a master read or TWI_WRITE for
+       for a master read.  */
+
     switch (state)
     {
     case STATE_ADDR:
-        if (twi_slave_read (twi, &addr, sizeof (addr)) == sizeof (addr))
+        ret = twi_slave_read (twi, &addr, sizeof (addr));
+        if (ret < 0)
+            fprintf (stderr, "Slave address read error %d\n", ret);
+        if (ret == sizeof (addr))
             state = STATE_DATA;
         break;
             
     case STATE_DATA:
         state = STATE_ADDR;
-        if (ret == TWI_READ)
+        if (ret == TWI_WRITE)
         {
             ret = twi_slave_read (twi, message, sizeof (message));
             if (ret == sizeof (message))
                 fprintf (stderr, "Slave read %d: %s\n", addr, message);
             else
-                fprintf (stderr, "Slave read %d: error %d\n", addr, ret);        
+                fprintf (stderr, "Slave read %d: error %d\n", addr, ret);
         }
-        else if (ret == TWI_WRITE)
+        else if (ret == TWI_READ)
         {
             sprintf (message, "Hello world! %d", write_count++);
             ret = twi_slave_write (twi, message, sizeof (message));
             if (ret == sizeof (message))
                 fprintf (stderr, "Slave write %d: %s\n", addr, message);
             else
-                fprintf (stderr, "Slave write %d: error %d\n", addr, ret);        
-
+                fprintf (stderr, "Slave write %d: error %d\n", addr, ret);
         }
     }
 }
