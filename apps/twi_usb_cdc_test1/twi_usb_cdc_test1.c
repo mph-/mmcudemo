@@ -23,6 +23,8 @@
 #define SLAVE_ADDR 0x42
 #define CLOCK_SPEED 100e3
 
+#define MESSAGE_SIZE 16
+
 #define GENERAL_LED_PIO  LED1_PIO
 #define USB_LED_PIO  LED2_PIO
 
@@ -49,7 +51,7 @@ process_command (void)
     char ch;
     uint8_t addr = 0;
     char *msg;
-    char message[16];
+    char message[MESSAGE_SIZE];
     twi_ret_t ret;
     
     ch = fgetc (stdin);
@@ -134,15 +136,15 @@ process_twi_slave (twi_t twi)
     static state_t state = STATE_ADDR;
     static int write_count = 0;
     static uint8_t addr = 0;
-    static char message[16];
-    static char buffer[17];
+    static char message[MESSAGE_SIZE];
+    static char buffer[MESSAGE_SIZE + 1];
     twi_ret_t ret;
 
     ret = twi_slave_poll (twi);
     switch (ret)
     {
         /* Nothing doing...  */
-    case TWI_OK:
+    case TWI_IDLE:
         return;
 
         /* Master write.  */
