@@ -152,12 +152,16 @@ process_twi_slave (twi_t twi)
            A long packet is an address plus a message.  */
         addr = buffer[0];
         if (ret < 0)
+        {
             fprintf (stderr, "Slave read %d: error %d\n", addr, ret);
+        }
         else if (ret == 1)
         {
             fprintf (stderr, "Slave read addr %d\n", addr);
 
-            /* TODO should immediately check for a read message.  */
+            /* Immediately check for a read message.  */
+            process_twi_slave (twi);
+            return;
         }
         else
         {
