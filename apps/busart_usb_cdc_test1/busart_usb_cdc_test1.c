@@ -9,6 +9,7 @@
 #include "busart.h"
 #include "usb_cdc.h"
 #include "sys.h"
+#include "pio.h"
 
 /* This can be 0 or 1.  */
 #define BUSART_DEVICE 0
@@ -30,7 +31,6 @@ int main (void)
     sys_redirect_stdin ((void *)usb_cdc_read, usb_cdc);
     sys_redirect_stdout ((void *)usb_cdc_write, usb_cdc);
     sys_redirect_stderr ((void *)usb_cdc_write, usb_cdc);
-
 
     /* Wait until USB configured.  */
     while (! usb_cdc_update ())
