@@ -1,7 +1,7 @@
 /* File:   extint_test1.c
    Author: M. P. Hayes, UCECE
    Date:   16 April 2013
-   Descr: 
+   Descr:  This only works for the SAM7S.
 */
 #include "led.h"
 #include "pio.h"
