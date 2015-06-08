@@ -37,7 +37,7 @@ twi_poll (twi_t twi)
         break;
         
     case TWI_WRITE:
-        ret = twi_slave_read (twi, &packet, sizeof(packet));
+        ret = twi_slave_read (twi, &packet, sizeof (packet));
         if (ret < 0)
         {
             /* Error, perhaps the link was broken?  */
@@ -66,8 +66,8 @@ twi_poll (twi_t twi)
     case TWI_READ:
         pio_output_toggle (LED2_PIO);
         message[0] = value;
-        ret = twi_slave_write (twi, message, sizeof(message));
-        if (ret != 1)
+        ret = twi_slave_write (twi, message, sizeof (message));
+        if (ret != sizeof (message))
             pio_output_high (LED3_PIO);
         break;
         
