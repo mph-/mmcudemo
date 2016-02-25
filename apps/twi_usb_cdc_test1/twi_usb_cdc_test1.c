@@ -208,6 +208,11 @@ int main (void)
         continue;
     pio_config_set (USB_LED_PIO, PIO_OUTPUT_HIGH);                
 
+#ifdef TWI_PULLUP_PIO
+    /* Actively enabled the pullups.  */
+    pio_config_set (TWI_PULLUP_PIO, PIO_OUTPUT_HIGH);                
+#endif
+
     fprintf (stderr, "Slave listening on address %d\n", SLAVE_ADDR);
 
     pacer_init (PACER_RATE);

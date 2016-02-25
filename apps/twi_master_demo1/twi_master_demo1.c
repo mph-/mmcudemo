@@ -32,6 +32,11 @@ main (void)
     /* Configure LED PIO as output.  */
     pio_config_set (LED1_PIO, PIO_OUTPUT_LOW);
 
+#ifdef TWI_PULLUP_PIO
+    /* Actively enabled the pullups.  */
+    pio_config_set (TWI_PULLUP_PIO, PIO_OUTPUT_HIGH);                
+#endif
+
     twi = twi_init(&twi_cfg);
 
     pacer_init (LOOP_POLL_RATE);
