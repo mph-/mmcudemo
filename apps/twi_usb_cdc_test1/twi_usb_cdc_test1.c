@@ -105,7 +105,7 @@ process_command (void)
         ret = twi_master_addr_write (twi, SLAVE_ADDR, addr, 1, message,
                                      sizeof (message));
         if (ret == sizeof (message))
-            fprintf (stderr, "Master write %d: %s\n", addr, message);        
+            fprintf (stderr, "Master write %d <%d>: %s\n", addr, ret, message);        
         else
             fprintf (stderr, "Master write %d: error %d\n", addr, ret);        
         break;
@@ -119,7 +119,7 @@ process_command (void)
         ret = twi_master_addr_read_timeout (twi, SLAVE_ADDR, addr, 1, message,
                                             sizeof (message), TIMEOUT_US);
         if (ret == sizeof (message))
-            fprintf (stderr, "Master read %d: %s\n", addr, message);        
+            fprintf (stderr, "Master read %d <%d>: %s\n", addr, ret, message);        
         else
             fprintf (stderr, "Master read %d: error %d\n", addr, ret);        
         break;
@@ -167,7 +167,7 @@ process_twi_slave (twi_t twi)
         }
         else
         {
-            fprintf (stderr, "Slave read %d: %s\n", addr, buffer + 1);
+            fprintf (stderr, "Slave read %d <%d>: %s\n", addr, ret, buffer + 1);
         }
         break;
 
@@ -176,7 +176,7 @@ process_twi_slave (twi_t twi)
         sprintf (message, "Hello world! %d", write_count++);
         ret = twi_slave_write (twi, message, sizeof (message));
         if (ret == sizeof (message))
-            fprintf (stderr, "Slave write %d: %s\n", addr, message);
+            fprintf (stderr, "Slave write %d <%d>: %s\n", addr, ret, message);
         else
             fprintf (stderr, "Slave write %d: error %d\n", addr, ret);
         break;
