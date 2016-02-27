@@ -21,6 +21,8 @@
 #define TIMEOUT_US 20000
 
 #define SLAVE_ADDR 0x42
+
+/* Choose CLOCK_SPEED depending on pullup value and bus capacitance.  */
 #define CLOCK_SPEED 100e3
 
 #define MESSAGE_SIZE 16
@@ -124,6 +126,10 @@ process_command (void)
             fprintf (stderr, "Master read %d: error %d\n", addr, ret);        
         break;
         
+    case 'x':
+        twi_reset (twi);
+        break;
+
     default:
         break;
     }
