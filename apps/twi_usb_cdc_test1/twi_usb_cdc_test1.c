@@ -53,7 +53,7 @@ process_command (void)
     char ch;
     uint8_t addr = 0;
     char *msg;
-    char message[MESSAGE_SIZE];
+    char message[MESSAGE_SIZE + 1];
     twi_ret_t ret;
     
     ch = fgetc (stdin);
@@ -103,10 +103,11 @@ process_command (void)
         while (*msg == ' ')
             msg++;
 
-        strncpy (message, msg, sizeof (message));
+        strncpy (message, msg, MESSAGE_SIZE);
+        message[MESSAGE_SIZE] = 0;
         ret = twi_master_addr_write (twi, SLAVE_ADDR, addr, 1, message,
-                                     sizeof (message));
-        if (ret == sizeof (message))
+                                     MESSAGE_SIZE);
+        if (ret == MESSAGE_SIZE)
             fprintf (stderr, "Master write %d <%d>: %s\n", addr, ret, message);        
         else
             fprintf (stderr, "Master write %d: error %d\n", addr, ret);        
@@ -119,8 +120,8 @@ process_command (void)
 
         /* NB, this blocks while the slave gets its act together.  */
         ret = twi_master_addr_read_timeout (twi, SLAVE_ADDR, addr, 1, message,
-                                            sizeof (message), TIMEOUT_US);
-        if (ret == sizeof (message))
+                                            MESSAGE_SIZE, TIMEOUT_US);
+        if (ret == MESSAGE_SIZE)
             fprintf (stderr, "Master read %d <%d>: %s\n", addr, ret, message);        
         else
             fprintf (stderr, "Master read %d: error %d\n", addr, ret);        
@@ -142,7 +143,7 @@ process_twi_slave (twi_t twi)
     static state_t state = STATE_ADDR;
     static int write_count = 0;
     static uint8_t addr = 0;
-    static char message[MESSAGE_SIZE];
+    static char message[MESSAGE_SIZE + 1];
     static char buffer[MESSAGE_SIZE + 1];
     twi_ret_t ret;
 
@@ -179,9 +180,10 @@ process_twi_slave (twi_t twi)
 
         /* Master read.  */
     case TWI_READ:
-        sprintf (message, "Hello world! %d", write_count++);
-        ret = twi_slave_write (twi, message, sizeof (message));
-        if (ret == sizeof (message))
+        snprintf (message, MESSAGE_SIZE, "Hello world! %d", write_count++);
+        message[MESSAGE_SIZE] = 0;
+        ret = twi_slave_write (twi, message, MESSAGE_SIZE);
+        if (ret == MESSAGE_SIZE)
             fprintf (stderr, "Slave write %d <%d>: %s\n", addr, ret, message);
         else
             fprintf (stderr, "Slave write %d: error %d\n", addr, ret);
