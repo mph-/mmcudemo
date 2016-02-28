@@ -144,7 +144,7 @@ process_twi_slave (twi_t twi)
     static int write_count = 0;
     static uint8_t addr = 0;
     static char message[MESSAGE_SIZE + 1];
-    static char buffer[MESSAGE_SIZE + 1];
+    static char buffer[MESSAGE_SIZE + 2];
     twi_ret_t ret;
 
     ret = twi_slave_poll (twi);
@@ -157,6 +157,7 @@ process_twi_slave (twi_t twi)
         /* Master write.  */
     case TWI_WRITE:
         ret = twi_slave_read (twi, buffer, sizeof (buffer));
+        buffer[MESSAGE_SIZE + 1] = 0;
         /* A short packet is just an address.
            A long packet is an address plus a message.  */
         addr = buffer[0];
