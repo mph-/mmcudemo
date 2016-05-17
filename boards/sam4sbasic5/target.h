@@ -15,9 +15,11 @@
 #define F_XTAL 18.432e6
 #define MCU_PLL_MUL 52
 #define MCU_PLL_DIV 5
+
 //#define F_XTAL 12e6
 //#define MCU_PLL_MUL 16
 //#define MCU_PLL_DIV 1
+
 #define MCU_USB_DIV 2
 /* 192 MHz  */
 #define F_PLL (F_XTAL / MCU_PLL_DIV * MCU_PLL_MUL)

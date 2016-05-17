@@ -5,6 +5,19 @@
    with USB CDC operating to provide a command line interface.  By default,
    the program acts as a slave but messages can be read/written as a master
    using the r and w commands.  The s command switches back to slave mode.
+
+   By default, the slave listens on address 66.  To send a message to
+   the slave use:
+
+   w 66 message
+
+   To read from the slave use:
+
+   r 66 
+
+   This should respond with Hello world! and a number corresponding to
+   the number of reads.
+
 */
 #include <stdio.h>
 #include <stdlib.h>
