@@ -8,6 +8,12 @@
 #define PACER_RATE 1000
 
 
+static const usb_cdc_cfg_t usb_cdc_cfg =
+{
+    .block = 1                  /* Blocking I/O  */
+};
+
+
 int main (void)
 {
     usb_cdc_t usb_cdc;
@@ -15,7 +21,7 @@ int main (void)
     pio_config_set (LED1_PIO, PIO_OUTPUT_LOW);                
     pio_config_set (LED2_PIO, PIO_OUTPUT_LOW);                
 
-    usb_cdc = usb_cdc_init ();
+    usb_cdc = usb_cdc_init (&usb_cdc_cfg);
     
     sys_redirect_stdin ((void *)usb_cdc_read, usb_cdc);
     sys_redirect_stdout ((void *)usb_cdc_write, usb_cdc);

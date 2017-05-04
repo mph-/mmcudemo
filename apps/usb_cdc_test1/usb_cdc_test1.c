@@ -7,13 +7,20 @@
 
 #define SPAM_RATE 5
 
+
+static const usb_cdc_cfg_t usb_cdc_cfg =
+{
+    .block = 1                  /* Blocking I/O  */
+};
+
+
 int main (void)
 {
     int ticks = 0;
     int count = 0;
     usb_cdc_t usb_cdc;
 
-    usb_cdc = usb_cdc_init ();
+    usb_cdc = usb_cdc_init (&usb_cdc_cfg);
     
     sys_redirect_stdin ((void *)usb_cdc_read, usb_cdc);
     sys_redirect_stdout ((void *)usb_cdc_write, usb_cdc);
